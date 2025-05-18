@@ -1,6 +1,6 @@
 FROM        --platform=$TARGETOS/$TARGETARCH node:21-bookworm-slim
 
-LABEL       author="Michael Parker" maintainer="parker@pterodactyl.io"
+LABEL       author="Onurcan Sevinc" maintainer="me@onurcansevinc.com"
 LABEL       org.opencontainers.image.source="https://github.com/onurcansevinc/puppeter-nodejs"
 LABEL       org.opencontainers.image.description="Node.js 21 Docker image for Pterodactyl"
 LABEL       org.opencontainers.image.licenses="MIT"
