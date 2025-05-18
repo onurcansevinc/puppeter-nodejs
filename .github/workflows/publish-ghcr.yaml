@@ -9,5 +9,5 @@ jobs:
             - uses: actions/checkout@v4
             - name: Checkout repository
               run: docker login --username onurcansevinc --password ${{ secrets.GH_PAT }} ghcr.io
-                  docker build . --t ghcr.io/onurcansevinc/puppeter-nodejs:latest
+                  docker build . ghcr.io/onurcansevinc/puppeter-nodejs:latest
                   docker push ghcr.io/onurcansevinc/puppeter-nodejs:latest
