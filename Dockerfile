@@ -23,15 +23,20 @@ RUN         npm install --global npm@10.x.x typescript ts-node @types/node
 # Install pnpm
 RUN         npm install -g pnpm@latest
 
+# Create app directory
+WORKDIR     /app
+
+# Initialize npm project
+RUN         npm init -y
+
 # Install Puppeteer
-RUN         npm init -y \
-            && npm install puppeteer \
-            && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+RUN         npm install puppeteer
+
+# Setup Puppeteer user
+RUN         groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
             && mkdir -p /home/pptruser/Downloads \
             && chown -R pptruser:pptruser /home/pptruser \
-            && chown -R pptruser:pptruser /node_modules \
-            && chown -R pptruser:pptruser /package.json \
-            && chown -R pptruser:pptruser /package-lock.json
+            && chown -R pptruser:pptruser /app
 
 USER        container
 ENV         USER=container HOME=/home/container
