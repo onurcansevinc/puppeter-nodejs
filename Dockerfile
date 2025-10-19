@@ -43,7 +43,7 @@ RUN         groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptrus
 
 USER        container
 ENV         USER=container HOME=/home/container
-WORKDIR     /app
+WORKDIR     /home/container
 
 # Set Chrome path environment variable
 ENV         CHROME_PATH=/usr/bin/google-chrome-stable
