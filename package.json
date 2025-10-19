@@ -1,0 +1,27 @@
+{
+    "name": "discord-whatsapp-bot",
+    "version": "1.0.0",
+    "description": "Discord WhatsApp Bot with Node.js 21",
+    "main": "bot.js",
+    "scripts": {
+        "start": "node bot.js",
+        "dev": "nodemon bot.js"
+    },
+    "dependencies": {
+        "puppeteer": "^22.0.0",
+        "whatsapp-web.js": "^1.23.0",
+        "discord.js": "^14.14.1",
+        "qrcode-terminal": "^0.12.0"
+    },
+    "engines": {
+        "node": ">=21.0.0"
+    },
+    "keywords": [
+        "discord",
+        "whatsapp",
+        "bot",
+        "puppeteer"
+    ],
+    "author": "Onurcan Sevinc",
+    "license": "MIT"
+}
