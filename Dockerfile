@@ -2,7 +2,7 @@ FROM        --platform=$TARGETOS/$TARGETARCH node:21-bookworm-slim
 
 LABEL       author="Onurcan Sevinc" maintainer="me@onurcansevinc.com"
 LABEL       org.opencontainers.image.source="https://github.com/onurcansevinc/puppeter-nodejs"
-LABEL       org.opencontainers.image.description="Node.js 21 Docker image for Pterodactyl"
+LABEL       org.opencontainers.image.description="Discord WhatsApp Bot with Node.js 21"
 LABEL       org.opencontainers.image.licenses="MIT"
 LABEL       org.opencontainers.image.public="true"
 
@@ -26,23 +26,31 @@ RUN         npm install -g pnpm@latest
 # Create app directory
 WORKDIR     /app
 
-# Initialize npm project
-RUN         npm init -y
+# Copy package files first for better caching
+COPY        package*.json ./
 
-# Install Puppeteer
-RUN         npm install puppeteer
+# Install dependencies
+RUN         npm ci --only=production
+
+# Copy application code
+COPY        --chown=container:container . .
 
 # Setup Puppeteer user
 RUN         groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
             && mkdir -p /home/pptruser/Downloads \
             && chown -R pptruser:pptruser /home/pptruser \
-            && chown -R pptruser:pptruser /app
+            && chown -R container:container /app
 
 USER        container
 ENV         USER=container HOME=/home/container
-WORKDIR     /home/container
+WORKDIR     /app
 
-COPY        --chown=container:container ./../entrypoint.sh /entrypoint.sh
-RUN         chmod +x /entrypoint.sh
-ENTRYPOINT    ["/usr/bin/tini", "-g", "--"]
-CMD         ["/entrypoint.sh"]
+# Set Chrome path environment variable
+ENV         CHROME_PATH=/usr/bin/google-chrome-stable
+ENV         NODE_ENV=production
+
+# Create necessary directories
+RUN         mkdir -p /app/whatsapp-auth /app/backups
+
+ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
+CMD         ["node", "bot.js"]
