@@ -1,6 +1,6 @@
 FROM        --platform=$TARGETOS/$TARGETARCH node:21-bookworm-slim
 
-LABEL       author="Onurcan Sevinc" maintainer="me@onurcansevinc.com"
+LABEL       author="Onur Can Sevinc" maintainer="me@onurcansevinc.com"
 LABEL       org.opencontainers.image.source="https://github.com/onurcansevinc/puppeter-nodejs"
 LABEL       org.opencontainers.image.description="Discord WhatsApp Bot with Node.js 21"
 LABEL       org.opencontainers.image.licenses="MIT"
@@ -19,40 +19,37 @@ RUN         apt update \
 
 # Install Node.js packages
 RUN         npm install --global npm@10.x.x typescript ts-node @types/node
-
-# Install pnpm
-RUN         npm install -g pnpm@latest
+# --- APPLICATION SETUP ---
 
 # Create app directory
 WORKDIR     /app
 
-# Copy package files first for better caching
+# Copy and install dependencies
 COPY        package*.json ./
-
-# Install dependencies
 RUN         npm install --production
 
-# Copy application code
+# Copy entire application
 COPY        --chown=container:container . .
 
-# Setup Puppeteer user
+# Puppeteer user setup
 RUN         groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
             && mkdir -p /home/pptruser/Downloads \
             && chown -R pptruser:pptruser /home/pptruser \
             && chown -R container:container /app
 
+# Switch to container user
 USER        container
 ENV         USER=container HOME=/home/container
-WORKDIR     /home/container
 
-# Set Chrome path environment variable
+# Ensure runtime directories exist
+RUN         mkdir -p /app/whatsapp-auth /app/backups
+
+# Set Chrome path
 ENV         CHROME_PATH=/usr/bin/google-chrome-stable
 ENV         NODE_ENV=production
 
-# Create necessary directories
-RUN         mkdir -p /app/whatsapp-auth /app/backups
-
-RUN         npm install
+# Final working directory where node runs
+WORKDIR     /app
 
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 CMD         ["node", "bot.js"]
