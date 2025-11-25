@@ -52,5 +52,7 @@ ENV         NODE_ENV=production
 # Create necessary directories
 RUN         mkdir -p /app/whatsapp-auth /app/backups
 
+RUN         npm install
+
 ENTRYPOINT  ["/usr/bin/tini", "-g", "--"]
 CMD         ["node", "bot.js"]
