@@ -39,7 +39,7 @@ RUN apt update \
     && rm -rf /var/lib/apt/lists/*
 
 # Global Node Tools
-RUN npm install --global npm@latest typescript ts-node @types/node
+RUN npm install -g typescript ts-node @types/node
 
 # pnpm
 RUN npm install -g corepack
